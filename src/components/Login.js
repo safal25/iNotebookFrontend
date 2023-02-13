@@ -1,13 +1,18 @@
-import React from 'react'
+import React ,{useState} from 'react'
 import { useNavigate } from 'react-router-dom';
+import Spinner from './Spinner';
 
 export default function Login() {
+
+  const [reqComp,setReqComp]=useState(false);
   const navigate=useNavigate();
+
   const handleSubmit= async (event)=>{
     event.preventDefault();
     const email=document.getElementById("inputEmail").value;
     const password=document.getElementById("inputPassword").value;
     console.log(JSON.stringify({email,password}));
+    setReqComp(true);
     const response=await fetch("http://localhost:5000/api/auth/login",{
         method : 'POST',
         headers : {
@@ -15,6 +20,7 @@ export default function Login() {
         },
         body : JSON.stringify({email,password})
     });
+    setReqComp(false);
 
     const json = await response.json();
     localStorage.setItem('token',json.authtoken);
@@ -39,7 +45,8 @@ export default function Login() {
             </div>
         </div>
         <button type="submit" className="btn btn-primary" >Sign in</button>
-    </form>
+      </form>
+      {reqComp && <Spinner/>}
     </div>
   )
 }

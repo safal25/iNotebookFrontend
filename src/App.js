@@ -4,19 +4,23 @@ import { BrowserRouter,Routes,Route } from "react-router-dom";
 import Home from "./components/Home";
 import About from "./components/About";
 import Login from "./components/Login";
+import NoteState from "./context/NoteState";
 
 
 function App() {
+
   return (
     <div>
-      <BrowserRouter>
-        <Navbar/>
-        <Routes>
-          <Route path="/" element={<Home/>}/>
-          <Route path="/about" element={<About/>} />
-          <Route path="/login" element={<Login/>} />
-        </Routes>
-      </BrowserRouter>
+      <NoteState>
+        <BrowserRouter>
+          <Navbar/>
+          <Routes>
+            <Route path="/" element={<Home />}/>
+            <Route path="/about" element={<About /> } />
+            <Route path="/login" element={<Login/>} />
+          </Routes>
+        </BrowserRouter>
+      </NoteState>
     </div>
   );
 }
