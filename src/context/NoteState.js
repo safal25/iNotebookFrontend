@@ -4,6 +4,7 @@ import NoteContext from "./noteContext";
 const NoteState=(props)=>{
     const notesInit=[];
     const [notes,setNotes]=useState(notesInit);
+    const [name,setName]=useState("");
     const host="http://localhost:5000/api/notes";
 
     const getNotes=async ()=>{
@@ -40,8 +41,12 @@ const NoteState=(props)=>{
 
     }
 
+    const updateName=(value)=>{
+        setName(value);
+    }
+
     return (
-        <NoteContext.Provider value={{notes,getNotes,addNotes}}>
+        <NoteContext.Provider value={{notes,name,updateName,getNotes,addNotes}}>
             {props.children}
         </NoteContext.Provider>
     )

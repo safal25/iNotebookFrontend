@@ -6,7 +6,7 @@ import NoteItem from './NoteItem';
 
 export default function Home() {
   const navigate=useNavigate();
-  const {notes,getNotes}=useContext(noteContext);
+  const {name,notes,getNotes}=useContext(noteContext);
 
   useEffect(()=>{
         if(!localStorage.getItem('token')){
@@ -19,7 +19,7 @@ export default function Home() {
   
    return (
        <div className="container">
-          <h1 className="my-3">Add your note here</h1>
+          <h1 className="my-3">Hi {name.split(' ')[0]}, Add your note here</h1>
           <AddNote/>
           <h1 className="my-3">Recent Notes</h1>
           <div className='row'>

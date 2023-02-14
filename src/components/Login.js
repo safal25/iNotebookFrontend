@@ -1,17 +1,18 @@
-import React ,{useState} from 'react'
+import React ,{useState,useContext} from 'react'
 import { useNavigate } from 'react-router-dom';
 import Spinner from './Spinner';
+import noteContext from '../context/noteContext';
 
 export default function Login() {
 
   const [reqComp,setReqComp]=useState(false);
   const navigate=useNavigate();
+  const {updateName}=useContext(noteContext);
 
   const handleSubmit= async (event)=>{
     event.preventDefault();
     const email=document.getElementById("inputEmail").value;
     const password=document.getElementById("inputPassword").value;
-    console.log(JSON.stringify({email,password}));
     setReqComp(true);
     const response=await fetch("http://localhost:5000/api/auth/login",{
         method : 'POST',
@@ -23,9 +24,10 @@ export default function Login() {
     setReqComp(false);
 
     const json = await response.json();
-    localStorage.setItem('token',json.authtoken);
     if(json.success){
-        navigate("/");
+      localStorage.setItem('token',json.authtoken);
+      updateName(json.name);
+      navigate("/");
     }
   }
 
