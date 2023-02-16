@@ -1,13 +1,11 @@
-import React,{useState,useContext} from "react";
+import React,{useState} from "react";
 import { useNavigate } from "react-router-dom";
 import Spinner from './Spinner';
-import noteContext from "../context/noteContext";
 
 function Signup() {
   const [creds,setCreds]=useState({name:"",email:"",password:""});
   const [reqComp,setReqComp]=useState(false);
   const navigate=useNavigate();
-  const {updateName}=useContext(noteContext);
 
   const handleSubmit=async (e)=>{
     e.preventDefault();
@@ -28,7 +26,7 @@ function Signup() {
         setReqComp(false);
         if(json.success){
             localStorage.setItem('token',json.authtoken);
-            updateName(json.name);
+            localStorage.setItem('name',json.name);
             navigate("/");
         }
     }

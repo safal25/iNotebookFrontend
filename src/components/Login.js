@@ -1,13 +1,11 @@
-import React ,{useState,useContext} from 'react'
+import React ,{useState} from 'react'
 import { useNavigate } from 'react-router-dom';
 import Spinner from './Spinner';
-import noteContext from '../context/noteContext';
 
 export default function Login() {
 
   const [reqComp,setReqComp]=useState(false);
   const navigate=useNavigate();
-  const {updateName}=useContext(noteContext);
 
   const handleSubmit= async (event)=>{
     event.preventDefault();
@@ -26,7 +24,7 @@ export default function Login() {
     const json = await response.json();
     if(json.success){
       localStorage.setItem('token',json.authtoken);
-      updateName(json.name);
+      localStorage.setItem('name',json.name);
       navigate("/");
     }
   }
