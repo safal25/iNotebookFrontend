@@ -1,52 +1,62 @@
-import React, { useContext, useRef,useState,useEffect } from 'react'
+import React, { useContext, useRef, useState, useEffect } from 'react'
 import noteContext from '../context/noteContext'
 import NoteItem from './NoteItem';
 
 export default function About() {
-  const name=localStorage.getItem('name');
-  const { notes,updateNote,getNotes,deleteNote } = useContext(noteContext);
+  const name = localStorage.getItem('name');
+  const { notes, updateNote, getNotes, deleteNote } = useContext(noteContext);
 
-  const [currentNote,setCurrentNote]=useState({title:"",tag:"",description:""});
-  const [currentId,setId]=useState('');
+  const [currentNote, setCurrentNote] = useState({ title: "", tag: "", description: "" });
+  const [currentId, setId] = useState('');
 
 
   const myRef = useRef(null);
   const closeRef = useRef(null);
+  const delOpenRef = useRef(null);
+  const delCloseRef = useRef(null);
 
   //added useEffect so that if someone reloads when they are in All Notes section all notes come up
   //without useEffect had to switch back to home tab to reload the notes
-  useEffect(()=>{
-        if(!notes || notes.length===0){
-          getNotes();
-        }
-  },[]);
+  useEffect(() => {
+    if (!notes || notes.length === 0) {
+      getNotes();
+    }
+  }, []);
 
-  const showModal = (title,tag,description,id) => {
-    setCurrentNote({title,tag,description});
+  const showModal = (title, tag, description, id) => {
+    setCurrentNote({ title, tag, description });
     setId(id);
     myRef.current.click();
   }
 
-  const noteDelete=(currId)=>{
-    deleteNote(currId);
+  const noteDelete = (currId) => {
+    setId(currId);
+    delOpenRef.current.click();
+    //deleteNote(currId);
   }
 
-  const onChange=(e)=>{
-    setCurrentNote({...currentNote,[e.target.name]:e.target.value});
+  const handleDeleteConfirm=()=>{
+    delCloseRef.current.click();
+    deleteNote(currentId);
   }
 
-  const handleUpdateNote=()=>{
-      updateNote(currentId,currentNote);
-      closeRef.current.click();
+  const onChange = (e) => {
+    setCurrentNote({ ...currentNote, [e.target.name]: e.target.value });
+  }
+
+  const handleUpdateNote = () => {
+    updateNote(currentId, currentNote);
+    closeRef.current.click();
   }
 
   return (
     <div className="container">
       <h1 className='my-3'>Hi {name.split(' ')[0]}, here are your Notes</h1>
+
+      {/*Update modal starts*/}
       <button ref={myRef} style={{ display: "none" }} type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Launch demo modal
       </button>
-
 
       <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog">
@@ -107,6 +117,33 @@ export default function About() {
           </div>
         </div>
       </div>
+
+      {/*Update modal ends */}
+
+      { /*Delete modal starts */}
+      <button ref={delOpenRef} style={{ display : "none"}} type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalDelete">
+        Launch demo modal
+      </button>
+
+      <div className="modal fade" id="ModalDelete" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h1 className="modal-title fs-5" id="ModalLabelDelete">Modal title</h1>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div className="modal-body">
+              Are you sure you want to delete the note??
+            </div>
+            <div className="modal-footer">
+              <button ref={delCloseRef} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" className="btn btn-primary" onClick={handleDeleteConfirm}>Confirm</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/*Delete modal ends*/}
+
       <div className='row'>
         {notes.map((element) => {
           return <div key={element._id} className='col-md-4 my-3'>

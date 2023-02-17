@@ -3,7 +3,7 @@ import { Link,useLocation,useNavigate } from 'react-router-dom'
 import noteContext from '../context/noteContext';
 function Navbar() {
   let location = useLocation();
-  const {clearNotes}=useContext(noteContext);
+  const {failAlert,clearNotes}=useContext(noteContext);
   const navigate = useNavigate();
   const handleLogout = ()=>{
     localStorage.removeItem('token');
@@ -36,7 +36,9 @@ function Navbar() {
                 </div>
             </div>
         </nav>
-      
+        {failAlert && <div class="alert alert-danger" role="alert">
+          Oops! something went wrong        
+        </div>}
     </div>
   )
 }

@@ -4,6 +4,8 @@ import NoteContext from "./noteContext";
 const NoteState=(props)=>{
     const notesInit=[];
     const [notes,setNotes]=useState(notesInit);
+    const [failAlert,setFailAlert]=useState(false);
+
     const host="http://localhost:5000/api/notes";
 
     const clearNotes=()=>{
@@ -19,7 +21,16 @@ const NoteState=(props)=>{
             }
         });
         const json=await response.json();
-        setNotes(json);
+        if(json.success){
+            setNotes(json.notes);
+        }
+        else{
+            setFailAlert(true);
+            setTimeout(()=>{
+                setFailAlert(false);
+            },3000);
+        }
+
         console.log('api called');
     }
 
@@ -41,8 +52,12 @@ const NoteState=(props)=>{
             newArr.push(json.note);
             setNotes(newArr.concat(notes));
         }
-
-
+        else{
+            setFailAlert(true);
+            setTimeout(()=>{
+                setFailAlert(false);
+            },3000);
+        }
     }
 
     const updateNote=async (id,{title,tag,description})=>{
@@ -70,6 +85,12 @@ const NoteState=(props)=>{
             }
             setNotes(currNotes);
         }
+        else{
+            setFailAlert(true);
+            setTimeout(()=>{
+                setFailAlert(false);
+            },3000);
+        }
 
 
     }
@@ -89,10 +110,16 @@ const NoteState=(props)=>{
             const newNotes=notes.filter((note)=>{return note._id!==id});
             setNotes(newNotes);
         }
+        else{
+            setFailAlert(true);
+            setTimeout(()=>{
+                setFailAlert(false);
+            },3000);
+        }
     }
 
     return (
-        <NoteContext.Provider value={{notes,getNotes,addNotes,updateNote,deleteNote,clearNotes}}>
+        <NoteContext.Provider value={{failAlert,notes,getNotes,addNotes,updateNote,deleteNote,clearNotes}}>
             {props.children}
         </NoteContext.Provider>
     )
